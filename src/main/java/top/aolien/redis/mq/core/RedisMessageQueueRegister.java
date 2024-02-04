@@ -76,7 +76,6 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
             }
 
             while (true) {
-                log.info("消息队列【" + queueName + "】开始监听");
                 try {
                     String msg =  stringRedisTemplate.opsForList().leftPop(queueName, 30L, TimeUnit.SECONDS);
                     RedisMessage redisMessage = null;

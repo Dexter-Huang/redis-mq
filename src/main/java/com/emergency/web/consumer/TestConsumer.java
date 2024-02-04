@@ -1,7 +1,7 @@
-package top.aolien.redis.consumer;
+package com.emergency.web.consumer;
 
 import org.springframework.stereotype.Component;
-import top.aolien.redis.mq.RedisListener;
+import com.emergency.web.mq.RedisListener;
 @Component
 public class TestConsumer {
     @RedisListener(queueName = "test", topicName = "start_call")

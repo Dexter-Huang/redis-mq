@@ -1,4 +1,4 @@
-package top.aolien.redis.mq.core;
+package com.emergency.web.mq.core;
 
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -7,8 +7,8 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.util.ReflectionUtils;
-import top.aolien.redis.mq.RedisListener;
-import top.aolien.redis.mq.RedisListenerMethod;
+import com.emergency.web.mq.RedisListener;
+import com.emergency.web.mq.RedisListenerMethod;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

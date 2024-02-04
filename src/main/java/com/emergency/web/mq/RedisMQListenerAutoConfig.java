@@ -1,10 +1,10 @@
-package top.aolien.redis.mq;
+package com.emergency.web.mq;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import top.aolien.redis.mq.core.RedisListenerAnnotationScanPostProcessor;
-import top.aolien.redis.mq.core.RedisMessageQueueRegister;
+import com.emergency.web.mq.core.RedisListenerAnnotationScanPostProcessor;
+import com.emergency.web.mq.core.RedisMessageQueueRegister;
 
 
 @Configuration

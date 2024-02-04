@@ -1,4 +1,4 @@
-package top.aolien.redis.mq.core;
+package com.emergency.web.mq.core;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -10,9 +10,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.dao.QueryTimeoutException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import top.aolien.redis.mq.RedisListenerMethod;
-import top.aolien.redis.mq.RedisMessage;
-import top.aolien.redis.mq.utils.JsonUtils;
+import com.emergency.web.mq.RedisListenerMethod;
+import com.emergency.web.mq.RedisMessage;
+import com.emergency.web.mq.utils.JsonUtils;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;

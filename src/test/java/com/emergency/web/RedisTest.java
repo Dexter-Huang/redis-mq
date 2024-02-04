@@ -1,4 +1,4 @@
-package top.aolien.redis;
+package com.emergency.web;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -6,8 +6,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-import top.aolien.redis.mq.RedisMessage;
-import top.aolien.redis.mq.utils.JsonUtils;
+import com.emergency.web.mq.RedisMessage;
+import com.emergency.web.mq.utils.JsonUtils;
 
 import javax.annotation.Resource;
 

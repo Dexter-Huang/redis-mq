@@ -1,4 +1,4 @@
-package top.aolien.redis.mq;
+package com.emergency.web.mq;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package top.aolien.redis.config;
+package com.emergency.web.config;
 
 
 import lombok.extern.slf4j.Slf4j;

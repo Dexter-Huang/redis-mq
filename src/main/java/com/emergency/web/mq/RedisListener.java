@@ -1,4 +1,4 @@
-package top.aolien.redis.mq;
+package com.emergency.web.mq;
 
 import java.lang.annotation.*;
 

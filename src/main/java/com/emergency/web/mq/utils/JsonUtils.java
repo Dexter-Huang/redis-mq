@@ -1,4 +1,4 @@
-package top.aolien.redis.mq.utils;
+package com.emergency.web.mq.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.Feature;

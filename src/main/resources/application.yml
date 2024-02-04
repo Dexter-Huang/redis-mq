@@ -1,0 +1,24 @@
+server:
+  port: 8081
+
+spring:
+  redis:
+    host: localhost
+    port: 6379
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  task:
+    execution:
+      pool:
+        core-size: 3
+        max-size: 6
+        queue-capacity: 100
+        keep-alive: 120
+      thread-name-prefix:
+        default: DEFAULT-
+        rescuer: RESCUER-
+        volunteer: VOLUNTEER-
+      shutdown:
+        await-termination-period: 5

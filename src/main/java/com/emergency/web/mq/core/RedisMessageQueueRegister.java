@@ -12,7 +12,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import com.emergency.web.mq.RedisListenerMethod;
 import com.emergency.web.mq.RedisMessage;
-import com.emergency.web.mq.utils.JsonUtils;
+import com.emergency.web.utils.JsonUtils;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
@@ -92,11 +92,11 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
                         for (RedisListenerMethod rlm : canApplyList) {
                             Method targetMethod = rlm.getTargetMethod();
                             if (rlm.getMethodParameterClassName().equals(RedisMessage.class.getName())
-                                && rlm.getTopicName().equals(redisMessage.getTopicName())) {
+                                && rlm.getTopicName().equals(redisMessage.getTopic())) {
                                 targetMethod.invoke(rlm.getBean(applicationContext), redisMessage);
                                 break;
                             } else if (rlm.getMethodParameterClassName().equalsIgnoreCase(redisMessage.getData().getClass().getName())
-                                && rlm.getTopicName().equals(redisMessage.getTopicName())){
+                                && rlm.getTopicName().equals(redisMessage.getTopic())){
                                 targetMethod.invoke(rlm.getBean(applicationContext), redisMessage.getData());
                                 break;
                             }
@@ -120,7 +120,7 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
                 log.error("queueName is null");
                 throw new IllegalArgumentException("queueName is null");
             }
-            if (StringUtils.isEmpty(redisMessage.getTopicName())) {
+            if (StringUtils.isEmpty(redisMessage.getTopic())) {
                 log.error("topicName is null");
                 throw new IllegalArgumentException("topicName is null");
             }

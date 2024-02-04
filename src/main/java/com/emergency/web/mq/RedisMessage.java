@@ -15,7 +15,7 @@ public class RedisMessage<T> implements Serializable {
 
     private String queueName;
 
-    private String topicName;
+    private String topic;
 
     private T data;
 

@@ -1,13 +1,12 @@
 package com.emergency.web;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import com.emergency.web.mq.RedisMessage;
-import com.emergency.web.mq.utils.JsonUtils;
+import com.emergency.web.utils.JsonUtils;
 
 import javax.annotation.Resource;
 
@@ -22,7 +21,7 @@ public class RedisTest {
         RedisMessage<String> redisMessage = new RedisMessage<>();
         redisMessage.setQueueName("test");
         redisMessage.setData("test-data");
-        redisMessage.setTopicName("cancel");
+        redisMessage.setTopic("cancel");
         stringRedisTemplate.opsForList().rightPush("test", JsonUtils.toJson(redisMessage));
     }
 
@@ -38,9 +37,45 @@ public class RedisTest {
 
     @Test
     public void testEquals(){
-        System.out.println(StringUtils.equals("test", "test"));;
-        System.out.println(StringUtils.equals("test", null));;
-        System.out.println(StringUtils.equals(null, null));;
+        String str = """
+                {
+                  "id":"09194567",
+                  "studentName":"王三",
+                  "nickName": null,
+                  "englishName":"King Three",
+                  "age":32,
+                  "email":"123@qq.com",
+                  "birthday":"1989-12-21",
+                  "joinDate":"2019-03-10 11:15:39",
+                  "courseScores":[
+                    {
+                      "course":"Java",
+                      "score":95
+                    },
+                    {
+                      "course":"C#",
+                      "score":94
+                    },
+                    {
+                      "course":"C++",
+                      "score":89
+                    }
+                  ],
+                  "courseScoresGroup":{
+                    "A":[
+                      "Java",
+                      "C#"
+                    ],
+                    "B":[
+                      "C++"
+                    ]
+                  },
+                  "valid":true
+                }
+                                
+                """;
+
+
     }
 
 }

@@ -1,5 +1,6 @@
 package com.emergency.web;
 
+import com.emergency.web.enums.RedisConstKeys;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,63 +19,20 @@ public class RedisTest {
 
     @Test
     public void testPop(){
-        RedisMessage<String> redisMessage = new RedisMessage<>();
-        redisMessage.setQueueName("test");
-        redisMessage.setData("test-data");
-        redisMessage.setTopic("cancel");
-        stringRedisTemplate.opsForList().rightPush("test", JsonUtils.toJson(redisMessage));
-    }
-
-    @Test
-    public void testList(){
-        RedisMessage<String> redisMessage = new RedisMessage<>();
-        redisMessage.setQueueName("test");
-        redisMessage.setData("test-data");
-        System.out.println(redisMessage.toString());
-        System.out.println(JsonUtils.toJson(redisMessage));
-        System.out.println(JsonUtils.fromJson(JsonUtils.toJson(redisMessage), RedisMessage.class));
+        String str = """
+                {"topic":"START_CALL","data":{"aidId":"415","rescueeAccount":"17841042461","rescueeName":"黄明朗","patientName":"","autoAddr":"广东省阳江市阳春市松竹路","rescueTime":"2024-02-05 00:21:31","type":1,"latitude":22.158151,"longitude":111.79792}}
+                """;
+        stringRedisTemplate.opsForList().rightPush(RedisConstKeys.EMERGENCY_KEY2, str);
     }
 
     @Test
     public void testEquals(){
         String str = """
-                {
-                  "id":"09194567",
-                  "studentName":"王三",
-                  "nickName": null,
-                  "englishName":"King Three",
-                  "age":32,
-                  "email":"123@qq.com",
-                  "birthday":"1989-12-21",
-                  "joinDate":"2019-03-10 11:15:39",
-                  "courseScores":[
-                    {
-                      "course":"Java",
-                      "score":95
-                    },
-                    {
-                      "course":"C#",
-                      "score":94
-                    },
-                    {
-                      "course":"C++",
-                      "score":89
-                    }
-                  ],
-                  "courseScoresGroup":{
-                    "A":[
-                      "Java",
-                      "C#"
-                    ],
-                    "B":[
-                      "C++"
-                    ]
-                  },
-                  "valid":true
-                }
-                                
+                {"topic":"CANCEL_CALL","data":{"aidId":"416","rescuerAccount":"","rescuerType":0,"is_success":false}}        
                 """;
-
+        RedisMessage o = JsonUtils.fromJson(str, RedisMessage.class);
+        System.out.println(o.getTopic());
+        System.out.println(o.getData());
 
     }
 

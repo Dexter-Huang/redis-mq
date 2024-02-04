@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class RedisListenerAnnotationScanPostProcessor implements BeanPostProcessor {
     @Getter
-    private static final List<RedisListenerMethod> candidates = new ArrayList<>();
+    private static final List<RedisListenerMethod> redisListenerMethods = new ArrayList<>();
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -42,7 +42,7 @@ public class RedisListenerAnnotationScanPostProcessor implements BeanPostProcess
                     rlm.setTopicName(topicName);
                     rlm.setTargetMethod(method);
                     rlm.setMethodParameterClassName(parameterTypes[0].getName());
-                    candidates.add(rlm);
+                    redisListenerMethods.add(rlm);
                 } else {
                     throw new RuntimeException("有@RedisListener注解的方法有且仅能包含一个参数");
                 }

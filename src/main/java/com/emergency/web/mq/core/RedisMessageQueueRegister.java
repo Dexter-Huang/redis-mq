@@ -21,12 +21,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class RedisMessageQueueRegister implements ApplicationRunner, ApplicationContextAware {
-
-
-    private final static String THREAD_PREFIX = "redismq-thread-";
 
     private final Set<String> registerQueueListener = new HashSet<>();
 
@@ -45,10 +43,11 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
     }
 
     public void init() {
-        List<RedisListenerMethod> candidates = RedisListenerAnnotationScanPostProcessor.getCandidates();
-        for (RedisListenerMethod candidate : candidates) {
-            registerQueueListener.add(candidate.getQueueName());
-        }
+        Set<String> queueNamesSet = RedisListenerAnnotationScanPostProcessor.getRedisListenerMethods()
+                .stream()
+                .map(RedisListenerMethod::getQueueName)
+                .collect(Collectors.toSet());
+        registerQueueListener.addAll(queueNamesSet);
     }
 
     @Override
@@ -58,7 +57,6 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
         // 启动redis消息队列监听器
         for (String listener : registerQueueListener) {
             Thread thread = new Thread(new Worker().setQueueName(listener));
-            thread.setName(THREAD_PREFIX + listener);
             defaultThreadPoolTaskExecutor.execute(thread);
             log.info("启动消息队列监听器：【" + listener + "】");
         }
@@ -67,7 +65,7 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
     private class Worker implements Runnable{
         private String queueName = "";
 
-        private List<RedisListenerMethod> canApplyList = new ArrayList<>();
+        private List<RedisListenerMethod> redisListenerMethods = new ArrayList<>();
 
         @Override
         public void run() {
@@ -80,7 +78,6 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
                     String msg =  stringRedisTemplate.opsForList().leftPop(queueName, 30L, TimeUnit.SECONDS);
                     RedisMessage redisMessage = null;
                     if(msg == null) {
-                        log.info("消息队列【" + queueName + "】没有消息");
                         continue;
                     } else {
                         redisMessage = JsonUtils.fromJson(msg, RedisMessage.class);
@@ -88,8 +85,8 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
                     }
                     checkRedisMessage(redisMessage);
 
-                    if (!canApplyList.isEmpty()) {
-                        for (RedisListenerMethod rlm : canApplyList) {
+                    if (!redisListenerMethods.isEmpty()) {
+                        for (RedisListenerMethod rlm : redisListenerMethods) {
                             Method targetMethod = rlm.getTargetMethod();
                             if (rlm.getMethodParameterClassName().equals(RedisMessage.class.getName())
                                 && rlm.getTopicName().equals(redisMessage.getTopic())) {
@@ -105,32 +102,28 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
 
                 } catch (QueryTimeoutException e1) {
                     log.warn(e1.getMessage());
-                } catch (Throwable e) {
-                    log.error("redisMQ队列【" + queueName + "】消息处理时异常", e);
+                } catch (Exception e) {
+                    log.error("redisMQ队列【" + queueName + "】消息处理时异常:", e.getClass());
                 }
             }
         }
 
         public void checkRedisMessage(RedisMessage redisMessage) {
             if (redisMessage == null) {
-                log.error("redisMessage is null");
+                log.error("[checkRedisMessage]redisMessage is null");
                 throw new IllegalArgumentException("redisMessage is null");
             }
-            if (StringUtils.isEmpty(redisMessage.getQueueName())) {
-                log.error("queueName is null");
-                throw new IllegalArgumentException("queueName is null");
-            }
             if (StringUtils.isEmpty(redisMessage.getTopic())) {
-                log.error("topicName is null");
+                log.error("[checkRedisMessage]topicName is null");
                 throw new IllegalArgumentException("topicName is null");
             }
         }
         private void obtainCanApplyList() {
-            if (canApplyList.size() <= 0) {
-                List<RedisListenerMethod> all = RedisListenerAnnotationScanPostProcessor.getCandidates();
+            if (redisListenerMethods.isEmpty()) {
+                List<RedisListenerMethod> all = RedisListenerAnnotationScanPostProcessor.getRedisListenerMethods();
                 for (RedisListenerMethod rlm : all) {
                     if (rlm.match(queueName)) {
-                        canApplyList.add(rlm);
+                        redisListenerMethods.add(rlm);
                     }
                 }
             }
